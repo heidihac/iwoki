@@ -2,6 +2,7 @@ from player import Player
 import numpy as np
 import os
 import pickle
+import random
 from datetime import datetime
 
 class QLearningPlayer(Player):
@@ -9,17 +10,18 @@ class QLearningPlayer(Player):
     Clase para implementar al jugador QLearner. Usa Reinforcement Learning iterativo.
     """
     
-    INITIALQVALUE = 0.5 # Valor con el que se inicializan los Q-values
+    INITIAL_QVALUE = 0.5 # Valor con el que se inicializan los Q-values
+    EXPLORATION_RATE = 0.15 # Porcentaje en que se obtienen las acciones en modo exploración. En modo explotación: 1 - EXPLORATION_RATE
+    LR = 0.4 # Learning Rate
+    DF = 0.15 # Discount Factor
     
-    def __init__(self, name, lr=0.4, df=0.8, Qfile=None):
+    def __init__(self, name, Qfile=None):
         super().__init__(name)
-        self.lr = lr # learning rate
-        self.df = df # discount factor
         self.numQUpdated = 0 # Dato para la obtención de métricas. Número de valores de Q actualizados tras aplicar la ecuación de Bellman
         self.game_log = []
         self.nextState = '0'
         self.nextAction = '0'
-
+        
         self.Qfile = Qfile
         if self.Qfile != None:
             self.q = self.load_Q(self.Qfile)
@@ -38,17 +40,15 @@ class QLearningPlayer(Player):
             players: Distribución de probabilidad. Los valores devueltos están comprendidos entre 0 y 1 y la suma de todos ellos es 1.
         """
         
-        obtiene una distribución de probabilidad, de forma que los valores están  comprendidos entre 0 y 1 y la suma de todos ellos es 1.
-        
         return np.exp(x) / np.sum(np.exp(x), axis=0)
     
     
-    def setQ(self, state, action, qValue=INITIALQVALUE):
+    def setQ(self, state, action, qValue=INITIAL_QVALUE):
         """
-        Función que inicializa todos los Q-values con INITIALQVALUE y se actualizan los Q-values existentes tras aplicarles la ecuación de Bellman.
+        Función que inicializa todos los Q-values con INITIAL_QVALUE y se actualizan los Q-values existentes tras aplicarles la ecuación de Bellman.
         PARAMETERS:
             state, action: clave de Q(state, action)
-            qValue: valor que se le asigna a Q. Por defecto INITIALQVALUE.
+            qValue: valor que se le asigna a Q. Por defecto INITIAL_QVALUE.
         RETURN:
             qValue: valor que se le ha asignado a Q.
         """
@@ -57,11 +57,11 @@ class QLearningPlayer(Player):
         if not qPrevValue: # Nuevo Q-value
             self.q[state, tuple(action)] = qValue
             return qValue
-        elif qPrevValue == self.INITIALQVALUE: # Se actualiza Q existente con el valor obtenido de la ecuación de Bellman
+        elif qPrevValue == self.INITIAL_QVALUE: # Se actualiza Q existente con el valor obtenido de la ecuación de Bellman
             self.q[state, tuple(action)] = qValue
             self.numQUpdated += 1
             return qValue
-        elif qValue == self.INITIALQVALUE: # Se intenta inicializar pero ya tenía un valor. Prevalece en Q el valor que tenía anteriormente
+        elif qValue == self.INITIAL_QVALUE: # Se intenta inicializar pero ya tenía un valor. Prevalece en Q el valor que tenía anteriormente
             return qPrevValue
         else: # Se actualiza Q existente con el valor obtenido de la ecuación de Bellman
             self.q[state, tuple(action)] = qValue
@@ -79,17 +79,15 @@ class QLearningPlayer(Player):
 
         return self.q.get((state, tuple(action)))
     
-    
-    def getMove(self, gameState, train=True, *args, **kwargs):
+
+    def getMove(self, gameState, *args, **kwargs):
         """
         Función que juega el turno del agente QLearner. Obtiene todas las acciones que el agente puede realizar y ejecuta la mejor de ellas.
         PARAMETERS:
             gameState: estado actual del juego.
-            train: True --> Se trata de un entrenamiento. Se ejecuta en modo exploración.
-                   False --> Se ejecuta en modo explotación.
         """
         
-        if gameState.gameOver:
+        if gameState.gameOver or len(self.game_log) == 4:
             otherPlayer = [p for p in gameState.players if p.name != 'QLearner'][0]
             reward = gameState.finalPointCount(self)[0] - gameState.finalPointCount(otherPlayer)[0]
             i = 0
@@ -98,21 +96,21 @@ class QLearningPlayer(Player):
                     self.nextState = '0'
                     self.nextAction = '0'
                 # Ecuación de Bellman
-                bellman = (1 - self.lr) * self.getQ(log[0], log[1]) + self.lr * (reward + self.df * self.getQ(self.nextState, self.nextAction))
+                bellman = (1 - self.LR) * self.getQ(log[0], log[1]) + self.LR * (reward + self.DF * self.getQ(self.nextState, self.nextAction))
                 self.setQ(log[0], log[1], bellman)
                 i += 1
                 self.nextState = log[0]
                 self.nextAction = log[1]
-                
-            gameState.endProperly = True
-            self.game_log = []
             
+            self.game_log = []
+            if gameState.gameOver:
+                gameState.endProperly = True
         else:
             state = gameState.getState(self)
             possibleActions =  gameState.getActions(self)
             qValues = [self.setQ(state, a) for a in possibleActions]
 
-            if train: # Exploración
+            if random.random() <= self.EXPLORATION_RATE: # Exploración
                 softQValues = self.softmax(qValues) # Se ponderan los Q-values. Valores entre 0 y 1 y cuya suma es 1.
                 action = possibleActions[int(np.random.choice(len(possibleActions), p=softQValues))]
             else: # Explotación
@@ -143,6 +141,8 @@ class QLearningPlayer(Player):
         print('Se guardan los {} valores de Q en el fichero {}.\n'.format(len(self.q), file_name))
         with open(os.path.join(q_dir, file_name), 'wb') as file:
             pickle.dump(self.q, file)
+
+        return None
        
           
     def load_Q(self, file_name):
