@@ -14,8 +14,8 @@ from agents.qlearner import QLearningPlayer
 from agents.minimax import MinimaxPlayer
 from agents.human import HumanPlayer
 
-NUM_GAMES = 100 # Número de partidas
-CHECK_POINT = 10 # Número de partidas para capturar datos generales que informan sobre la evolución de las partidas
+NUM_GAMES = 50000 # Número de partidas
+CHECK_POINT = 100 # Número de partidas para capturar datos generales que informan sobre la evolución de las partidas
 
 def playGame(players, gameSpace):
     """ 
@@ -28,7 +28,7 @@ def playGame(players, gameSpace):
         for player in players:
             if player.isTurn:
                 if gameSpace.gameOver:
-                    agents[player.name].getMove(gameSpace, train=True)
+                    agents[player.name].getMove(gameSpace)
                     if gameSpace.endProperly:
                         return None
                     gameSpace.endProperly = True
@@ -36,7 +36,7 @@ def playGame(players, gameSpace):
                 elif player.name == 'Human':
                     gameSpace.summary()
             
-                agents[player.name].getMove(gameSpace, train=True)
+                agents[player.name].getMove(gameSpace)
                 player.numTurns += 1
                 break
 
@@ -106,11 +106,12 @@ if __name__=="__main__":
     agents = {
     'Random' : RandomPlayer('Random'),
     'Greedy' : GreedyPlayer('Greedy'),
-    'QLearner' : QLearningPlayer('QLearner', lr=0.5, df=0.8, Qfile=None),
+    'QLearner' : QLearningPlayer('QLearner', Qfile=None),
     'Minimax' : MinimaxPlayer('Minimax'),
     'Human' : HumanPlayer('Human'),
     }
-    players = [agents['Greedy'], agents['Minimax']]
+    # Se seleccionan los jugadores de la partida:
+    players = [agents['Greedy'], agents['QLearner']]
 
     previous_check_time = start_all
     for gameId in range(NUM_GAMES): # Número de partidas
