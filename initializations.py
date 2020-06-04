@@ -1,107 +1,107 @@
 import numpy as np
 from gaps import HexagonalGap, SmallGap
-from pieces import HexagonalPiece, SmallPiece
+from tiles import HexagonalTile, SmallTile
 import player
 import gameState
 
-def initializePieces():
+def initializeTiles():
     """ 
-    Función que crea/inicializa todas las fichas hexagonales y pequeñas.
+    Función that creates/initializes all hexagonal and small tiles.
     RETURNS:
-        hexagonalPieces, smallPieces: listas de fichas hexagonales y pequeñas que van a estar disponibles a lo largo de la partida.
+        hexagonalTiles, smallTiles: lists of hexagonal and small tiles that will be available throughout the game.
     """
-    # Fichas Hexagonales:
-    hp1 = HexagonalPiece('hp1', ['*', '5', '2', '4', '6', '6'])
-    hp2 = HexagonalPiece('hp2', ['*', '2', '0', '4', '4', '6'])
-    hp3 = HexagonalPiece('hp3', ['*', '3', '6', '2', '4', '2'])
-    hp4 = HexagonalPiece('hp4', ['*', '4', '0', '3', '4', '6'])
-    hp5 = HexagonalPiece('hp5', ['*', '5', '3', '4', '2', '1'])
-    hp6 = HexagonalPiece('hp6', ['*', '2', '3', '4', '6', '5'])
-    hp7 = HexagonalPiece('hp7', ['*', '6', '0', '5', '2', '4'])
-    hp8 = HexagonalPiece('hp8', ['*', '6', '3', '0', '3', '5'])
-    hp9 = HexagonalPiece('hp9', ['*', '2', '0', '1', '4', '5'])
-    hp10 = HexagonalPiece('hp10', ['*', '6', '4', '2', '0', '3'])
-    hp11 = HexagonalPiece('hp11', ['*', '0', '1', '2', '3', '4'])
-    hp12 = HexagonalPiece('hp12', ['*', '6', '1', '4', '4', '3'])
-    hp13 = HexagonalPiece('hp13', ['*', '4', '1', '6', '3', '5'])
-    hp14 = HexagonalPiece('hp14', ['*', '4', '5', '2', '1', '4'])
-    hp15 = HexagonalPiece('hp15', ['*', '4', '1', '0', '2', '2'])
-    hp16 = HexagonalPiece('hp16', ['*', '6', '5', '5', '4', '3'])
-    hp17 = HexagonalPiece('hp17', ['*', '6', '5', '1', '0', '3'])
-    hp18 = HexagonalPiece('hp18', ['*', '5', '0', '4', '2', '6'])
-    hp19 = HexagonalPiece('hp19', ['*', '5', '4', '4', '2', '0'])
-    hp20 = HexagonalPiece('hp20', ['*', '4', '2', '3', '5', '6'])
+    # Hexagonal tiles:
+    ht1 = HexagonalTile('ht1', ['*', '5', '2', '4', '6', '6'])
+    ht2 = HexagonalTile('ht2', ['*', '2', '0', '4', '4', '6'])
+    ht3 = HexagonalTile('ht3', ['*', '3', '6', '2', '4', '2'])
+    ht4 = HexagonalTile('ht4', ['*', '4', '0', '3', '4', '6'])
+    ht5 = HexagonalTile('ht5', ['*', '5', '3', '4', '2', '1'])
+    ht6 = HexagonalTile('ht6', ['*', '2', '3', '4', '6', '5'])
+    ht7 = HexagonalTile('ht7', ['*', '6', '0', '5', '2', '4'])
+    ht8 = HexagonalTile('ht8', ['*', '6', '3', '0', '3', '5'])
+    ht9 = HexagonalTile('ht9', ['*', '2', '0', '1', '4', '5'])
+    ht10 = HexagonalTile('ht10', ['*', '6', '4', '2', '0', '3'])
+    ht11 = HexagonalTile('ht11', ['*', '0', '1', '2', '3', '4'])
+    ht12 = HexagonalTile('ht12', ['*', '6', '1', '4', '4', '3'])
+    ht13 = HexagonalTile('ht13', ['*', '4', '1', '6', '3', '5'])
+    ht14 = HexagonalTile('ht14', ['*', '4', '5', '2', '1', '4'])
+    ht15 = HexagonalTile('ht15', ['*', '4', '1', '0', '2', '2'])
+    ht16 = HexagonalTile('ht16', ['*', '6', '5', '5', '4', '3'])
+    ht17 = HexagonalTile('ht17', ['*', '6', '5', '1', '0', '3'])
+    ht18 = HexagonalTile('ht18', ['*', '5', '0', '4', '2', '6'])
+    ht19 = HexagonalTile('ht19', ['*', '5', '4', '4', '2', '0'])
+    ht20 = HexagonalTile('ht20', ['*', '4', '2', '3', '5', '6'])
     
-    hexagonalPieces = [hp1,hp2,hp3,hp4,hp5,hp6,hp7,hp8,hp9,hp10,hp11,hp12,hp13,hp14,hp15,hp16,hp17,hp18,hp19,hp20]
+    hexagonalTiles = [ht1,ht2,ht3,ht4,ht5,ht6,ht7,ht8,ht9,ht10,ht11,ht12,ht13,ht14,ht15,ht16,ht17,ht18,ht19,ht20]
     
-    # Fichas Pequeñas:
-    sp1 = SmallPiece('sp1', ['1','2','3'])
-    sp2 = SmallPiece('sp2', ['1','1','2'])
-    sp3 = SmallPiece('sp3', ['1','1','3'])
-    sp4 = SmallPiece('sp4', ['1','1','4'])
-    sp5 = SmallPiece('sp5', ['1','2','2'])
-    sp6 = SmallPiece('sp6', ['1','3','3'])
-    sp7 = SmallPiece('sp7', ['1','2','4'])
-    sp8 = SmallPiece('sp8', ['2','2','2'])
-    sp9 = SmallPiece('sp9', ['2','2','3'])
-    sp10 = SmallPiece('sp10', ['2','2','4'])
-    sp11 = SmallPiece('sp11', ['2','3','3'])
-    sp12 = SmallPiece('sp12', ['3','3','3'])
+    # Small tiles:
+    st1 = SmallTile('st1', ['1','2','3'])
+    st2 = SmallTile('st2', ['1','1','2'])
+    st3 = SmallTile('st3', ['1','1','3'])
+    st4 = SmallTile('st4', ['1','1','4'])
+    st5 = SmallTile('st5', ['1','2','2'])
+    st6 = SmallTile('st6', ['1','3','3'])
+    st7 = SmallTile('st7', ['1','2','4'])
+    st8 = SmallTile('st8', ['2','2','2'])
+    st9 = SmallTile('st9', ['2','2','3'])
+    st10 = SmallTile('st10', ['2','2','4'])
+    st11 = SmallTile('st11', ['2','3','3'])
+    st12 = SmallTile('st12', ['3','3','3'])
 
-    sp13 = SmallPiece('sp13', ['1','2','3'])
-    sp14 = SmallPiece('sp14', ['1','1','2'])
-    sp15 = SmallPiece('sp15', ['1','1','3'])
-    sp16 = SmallPiece('sp16', ['1','1','4'])
-    sp17 = SmallPiece('sp17', ['1','2','2'])
-    sp18 = SmallPiece('sp18', ['1','3','3'])
-    sp19 = SmallPiece('sp19', ['1','2','4'])
-    sp20 = SmallPiece('sp20', ['2','2','2'])
-    sp21 = SmallPiece('sp21', ['2','2','3'])
-    sp22 = SmallPiece('sp22', ['2','2','4'])
-    sp23 = SmallPiece('sp23', ['2','3','3'])
-    sp24 = SmallPiece('sp24', ['3','3','3'])
+    st13 = SmallTile('st13', ['1','2','3'])
+    st14 = SmallTile('st14', ['1','1','2'])
+    st15 = SmallTile('st15', ['1','1','3'])
+    st16 = SmallTile('st16', ['1','1','4'])
+    st17 = SmallTile('st17', ['1','2','2'])
+    st18 = SmallTile('st18', ['1','3','3'])
+    st19 = SmallTile('st19', ['1','2','4'])
+    st20 = SmallTile('st20', ['2','2','2'])
+    st21 = SmallTile('st21', ['2','2','3'])
+    st22 = SmallTile('st22', ['2','2','4'])
+    st23 = SmallTile('st23', ['2','3','3'])
+    st24 = SmallTile('st24', ['3','3','3'])
 
-    sp25 = SmallPiece('sp25', ['1','2','3'])
-    sp26 = SmallPiece('sp26', ['1','1','2'])
-    sp27 = SmallPiece('sp27', ['1','1','3'])
-    sp28 = SmallPiece('sp28', ['1','1','4'])
-    sp29 = SmallPiece('sp29', ['1','2','2'])
-    sp30 = SmallPiece('sp30', ['1','3','3'])
-    sp31 = SmallPiece('sp31', ['1','2','4'])
-    sp32 = SmallPiece('sp32', ['2','2','2'])
-    sp33 = SmallPiece('sp33', ['2','2','3'])
-    sp34 = SmallPiece('sp34', ['2','2','4'])
-    sp35 = SmallPiece('sp35', ['2','3','3'])
-    sp36 = SmallPiece('sp36', ['3','3','3'])
+    st25 = SmallTile('st25', ['1','2','3'])
+    st26 = SmallTile('st26', ['1','1','2'])
+    st27 = SmallTile('st27', ['1','1','3'])
+    st28 = SmallTile('st28', ['1','1','4'])
+    st29 = SmallTile('st29', ['1','2','2'])
+    st30 = SmallTile('st30', ['1','3','3'])
+    st31 = SmallTile('st31', ['1','2','4'])
+    st32 = SmallTile('st32', ['2','2','2'])
+    st33 = SmallTile('st33', ['2','2','3'])
+    st34 = SmallTile('st34', ['2','2','4'])
+    st35 = SmallTile('st35', ['2','3','3'])
+    st36 = SmallTile('st36', ['3','3','3'])
 
-    sp37 = SmallPiece('sp37', ['1','2','3'])
-    sp38 = SmallPiece('sp38', ['1','1','2'])
-    sp39 = SmallPiece('sp39', ['1','1','3'])
-    sp40 = SmallPiece('sp40', ['1','1','4'])
-    sp41 = SmallPiece('sp41', ['1','2','2'])
-    sp42 = SmallPiece('sp42', ['1','3','3'])
-    sp43 = SmallPiece('sp43', ['1','2','4'])
-    sp44 = SmallPiece('sp44', ['2','2','2'])
-    sp45 = SmallPiece('sp45', ['2','2','3'])
-    sp46 = SmallPiece('sp46', ['2','2','4'])
-    sp47 = SmallPiece('sp47', ['2','3','3'])
-    sp48 = SmallPiece('sp48', ['3','3','3'])
+    st37 = SmallTile('st37', ['1','2','3'])
+    st38 = SmallTile('st38', ['1','1','2'])
+    st39 = SmallTile('st39', ['1','1','3'])
+    st40 = SmallTile('st40', ['1','1','4'])
+    st41 = SmallTile('st41', ['1','2','2'])
+    st42 = SmallTile('st42', ['1','3','3'])
+    st43 = SmallTile('st43', ['1','2','4'])
+    st44 = SmallTile('st44', ['2','2','2'])
+    st45 = SmallTile('st45', ['2','2','3'])
+    st46 = SmallTile('st46', ['2','2','4'])
+    st47 = SmallTile('st47', ['2','3','3'])
+    st48 = SmallTile('st48', ['3','3','3'])
     
-    smallPieces = [sp1,sp2,sp3,sp4,sp5,sp6,sp7,sp8,sp9,sp10,sp11,sp12,sp13,sp14,sp15,sp16,
-                   sp17,sp18,sp19,sp20,sp21,sp22,sp23,sp24,sp25,sp26,sp27,sp28,sp29,sp30,sp31,sp32,
-                   sp33,sp34,sp35,sp36,sp37,sp38,sp39,sp40,sp41,sp42,sp43,sp44,sp45,sp46,sp47,sp48]
+    smallTiles = [st1,st2,st3,st4,st5,st6,st7,st8,st9,st10,st11,st12,st13,st14,st15,st16,
+                   st17,st18,st19,st20,st21,st22,st23,st24,st25,st26,st27,st28,st29,st30,st31,st32,
+                   st33,st34,st35,st36,st37,st38,st39,st40,st41,st42,st43,st44,st45,st46,st47,st48]
     
-    return hexagonalPieces, smallPieces
+    return hexagonalTiles, smallTiles
 
 
 def initializeGaps():
     """ 
-    Función que crea/inicializa todos los huecos del tablero virtual.
+    Function that creates/initializes al the gaps in the virtual board.
     RETURNS:
-        hexagonalGaps, smallGaps: listas de huecos para fichas hexagonales y pequeñas.
-        fittableHexagonalGaps, fittableSmallGaps: listas de huecos, para fichas hexagonales y pequeñas, en los que se puede colocar alguna ficha. 
+        hexagonalGaps, smallGaps: lists of gaps for hexagonal and small tiles.
+        fittableHexagonalGaps, fittableSmallGaps: lists of gaps in which hexagonal and small tiles can be placed. 
     """
-    # Huecos para fichas hexagonales:
+    # Gaps for hexagonal tiles:
     h1 = HexagonalGap('H1')
     h2 = HexagonalGap('H2')
     h3 = HexagonalGap('H3')
@@ -167,9 +167,9 @@ def initializeGaps():
                      'H45': h45, 'H46': h46, 'H47': h47, 'H48': h48, 'H49': h49, 'H50': h50, 'H51': h51,
                      'H52': h52, 'H53': h53, 'H54': h54, 'H55': h55}
 
-    # Huecos para fichas pequeñas. Cada elemento de la lista está formado por los siguientes valores:
-    #    - id del hueco hexagonal del tablero. 
-    #    - Número asignado a ese vértice. '_' indica que el vértice aún no tiene valor asignado. 
+    # Gaps for small tiles. Each item on the list consists of the following values:
+    #    - id of the hexagonal gap in the board. 
+    #    - Number assigned to that vertex. '_' indicates that the vertex has not yet been assigned a value. 
     #    - V --> Vacant; 'O' --> Occupied
     h1_h2_h3 = SmallGap([['H1', '2', '_', 'V'], ['H2', '4', '_', 'V'], ['H3', '6', '_', 'V']])
     h1_h3_h4 = SmallGap([['H1', '3', '_', 'V'], ['H3', '5', '_', 'V'], ['H4', '1', '_', 'V']])
@@ -292,30 +292,30 @@ def initializeGaps():
 
 def initializeAll(players):
     """
-    Función que inicializa todas fichas, los huecos y los jugadores.
+    Function that initializes all tiles, gaps and players.
     PARAMETER:
-        players: lista de jugadores.
+        players: list of players.
     RETURN:
-        bameSpace: espacio de juego.
+        bameSpace.
     """
-    print("Se incicializan todas las fichas.")
-    hexagonalPiecesAvailable, smallPiecesAvailable = initializePieces()
+    print("All tiles are initialized.")
+    hexagonalTilesAvailable, smallTilesAvailable = initializeTiles()
 
-    print("Se incicializan todos los huecos.")
+    print("All gaps are initialized.")
     hexagonalGaps, smallGaps, fittableHexagonalGaps, fittableSmallGaps = initializeGaps()
     
-    print("Se inicializan los jugadores.")
+    print("All players are initialized.")
     for player in players:
         player.isTurn = False
-        player.smallPieces = []
-        player.hexagonalPieces = []
+        player.smallTiles = []
+        player.hexagonalTiles = []
         player.score = 0
         player.redIndicator = False
-        player.whiteIndicator = 0
-        player.gotPieceBefore = False
+        player.whiteIndicators = 0
+        player.gotTileBefore = False
         
-    print("Se crea el espacio de juego.")
-    gameSpace = gameState.GameState(players, hexagonalPiecesAvailable, smallPiecesAvailable, hexagonalGaps, smallGaps,
+    print("Game space is created.")
+    gameSpace = gameState.GameState(players, hexagonalTilesAvailable, smallTilesAvailable, hexagonalGaps, smallGaps,
                                     fittableHexagonalGaps, fittableSmallGaps)
     return gameSpace
 

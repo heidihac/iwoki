@@ -14,15 +14,15 @@ from agents.qlearner import QLearningPlayer
 from agents.minimax import MinimaxPlayer
 from agents.human import HumanPlayer
 
-NUM_GAMES = 50000 # Número de partidas
-CHECK_POINT = 100 # Número de partidas para capturar datos generales que informan sobre la evolución de las partidas
+NUM_GAMES = 100 # Number of games
+CHECK_POINT = 100 # Number of games to stablish a check point, capturing the general data to inform about the evolution of the games
 
 def playGame(players, gameSpace):
-    """ 
-    Función que controla el turno de los jugadores y finaliza la partida. 
+    """  
+    Function that controls the turn of the players and ends de game.
     PARAMETERS:
-        players: lista de jugadores.
-        gameSpace: espacio de juego.
+        players: list of players.
+        gameSpace.
     """
     while True:
         for player in players:
@@ -43,35 +43,35 @@ def playGame(players, gameSpace):
 
 def saveMetrics(file_name, time, games_played, players):
     """ 
-    Función que en el estado de Check Point almacena y muestra datos generales que sobre la evolución de las partidas. 
+    Function that stores and shows general data about the evolution of the games in the check point.
     PARAMETERS:
-        file_name: fichero donde se almacena la información.
-        time: tiempo desde el anterior check point.
-        games_played: número de partidas jugadas desde el inicio hasta el check point.
-        players: lista de jugadores
+        file_name: file where the information is stored.
+        time: time from previous check point.
+        games_played: number of games played from the beginning to the check point.
+        players: list of players.
     """
     print('*****************************')
     print('        CHECK POINT')
     print('*****************************')
     mean_time = time / games_played
-    print('Partidas jugadas: {}'.format(games_played))
-    print(f'Tiempo medio de las partidas:{mean_time: .2f}s')
-    print('Promedio turnos empleados por cada jugador: {}'.format(int(players[0].numTurns / games_played)))
+    print('Games played: {}'.format(games_played))
+    print(f'Average of time of the games:{mean_time: .2f}s')
+    print('Average of turns used by each player: {}'.format(int(players[0].numTurns / games_played)))
     winsAny = 0
     nonMinimaxScore=0
     for player in players:
-        print('Número de partidas que gana el agente {}: {}'.format(player.name, player.numWins))
+        print('Number of games that the agent {} wins: {}'.format(player.name, player.numWins))
         winsAny += player.numWins
         if player.name != 'Minimax':
             nonMinimaxScore += player.accumulatedScore
-    print('Número de empates: {}'.format(games_played-winsAny))
+    print('Number of draws: {}'.format(games_played-winsAny))
     if any([p for p in players if p.name == 'QLearner']):
-        print('Número de Q-values actualizados: {}'.format(agents['QLearner'].numQUpdated))
-        print('Número de Q-values TOTALES en Qfile: {}'.format(len(agents['QLearner'].q)))
+        print('Number of updated Q-values: {}'.format(agents['QLearner'].numQUpdated))
+        print('Number of TOTALS Q-values in the Qfile: {}'.format(len(agents['QLearner'].q)))
     if any([p for p in players if p.name == 'Minimax']):
-        print(f'Tiempo medio que tarda Minimax en decidir su movimiento:{(check_time - start_all) / players[0].numTurns: .2f}s')
-        print('Promedio de diferencia de puntos por partida: {}'.format(int(agents['Minimax'].accumulatedScore - nonMinimaxScore) / games_played))
-        print('Promedio de nodos generados por partida: {}'.format(int(agents['Minimax'].numNodes / games_played)))
+        print(f'Average of time for Minimax to decide its movement:{(check_time - start_all) / players[0].numTurns: .2f}s')
+        print('Average of scores difference per game: {}'.format(int(agents['Minimax'].accumulatedScore - nonMinimaxScore) / games_played))
+        print('Average of generated nodes per game: {}'.format(int(agents['Minimax'].numNodes / games_played)))
         
     with open(os.path.join(q_dir, file_name), 'a') as file:
         file.write(str(games_played) +','
@@ -92,7 +92,7 @@ def saveMetrics(file_name, time, games_played, players):
 if __name__=="__main__":
     start_all = time.time()
     
-    # Se crea el dataset para las métricas
+    # The dataset for the metrics is created
     file_name = datetime.now().strftime('iwoki_%Y_%m_%d_%H_%M.csv')  # dataset
     q_dir = 'datasets'
     if not os.path.exists(q_dir):
@@ -102,7 +102,7 @@ if __name__=="__main__":
                'scoresQLearner,scoresRandom,scoresGreedy,scoresMinimax,updatedQ,totalQ\n')
         
     os.system('cls')          
-    print ("\n-- Bienvenido al iwoki--\n")
+    print ("\n-- Welcome to iwoki--\n")
     agents = {
     'Random' : RandomPlayer('Random'),
     'Greedy' : GreedyPlayer('Greedy'),
@@ -110,34 +110,34 @@ if __name__=="__main__":
     'Minimax' : MinimaxPlayer('Minimax'),
     'Human' : HumanPlayer('Human'),
     }
-    # Se seleccionan los jugadores de la partida:
-    players = [agents['Greedy'], agents['QLearner']]
+    # Select the players fo the game:
+    players = [agents['Random'], agents['QLearner']]
 
     previous_check_time = start_all
-    for gameId in range(NUM_GAMES): # Número de partidas
+    for gameId in range(NUM_GAMES): # Number of games
         start = time.time()
-        print('\nPartida número {}:\n'.format(gameId+1))
+        print('\nGame number {}:\n'.format(gameId+1))
 
         gameSpace = initializeAll(players)
-        gameSpace.getAllInitialPieces(numSmall=9, numHexagonal=3)
+        gameSpace.getAllInitialTiles(numSmall=9, numHexagonal=3)
 
         players = drawPlayersOrder(gameSpace.players)
-        print("Empieza la partida el jugador " + players[0].name)
-        print("\n-- Se inicia la partida --")
+        print("The game begins with the player " + players[0].name)
+        print("\n-- The game begins --")
         playGame(players, gameSpace)
 
         end = time.time()
-        print(f'\nDuración de la partida:{end - start: .2f}s = {(end - start)/60:.2f} min = {(end - start)/3600:.2f} hours\n')
+        print(f'\nGame duration:{end - start: .2f}s = {(end - start)/60:.2f} min = {(end - start)/3600:.2f} hours\n')
         if (gameId+1) % CHECK_POINT == 0:
             check_time = time.time()
             saveMetrics(file_name, check_time - previous_check_time, gameId+1, players)
-            if not any([p for p in players if p.name == 'Minimax']): # 'Minimax' no es ninguno de los jugadores
+            if not any([p for p in players if p.name == 'Minimax']): # None of the players is 'Minimax'
                 for player in players:
                     player.accumulatedScore = 0
 
     if any([p for p in players if p.name == 'QLearner']):
         agents['QLearner'].save_Q()
     end_all = time.time()
-    print(f'Tiempo total empleado:{end_all - start_all: .2f}s = {(end_all - start_all)/60:.2f} min = {(end_all - start_all)/3600:.2f} hours')
+    print(f'Total time:{end_all - start_all: .2f}s = {(end_all - start_all)/60:.2f} min = {(end_all - start_all)/3600:.2f} hours')
 
     

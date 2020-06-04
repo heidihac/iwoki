@@ -2,10 +2,10 @@ import numpy as np
 
 class SmallGap:
     """
-    Clase que representa un hueco del tablero de juego reservado para una ficha pequeña.
+    Class that represents a gap in the game board reserved for a small tile.
     """
     def __init__(self, vertices):
-        self.vertices = vertices # lista en la que cada elemento corresponde con un vértice interior del hueco de la ficha
+        self.vertices = vertices # list in which each element corresponds to an interior vertex of the tile gap
         idAux = ''
         for vertix in vertices:
             idAux = idAux + vertix[0] if idAux == '' else idAux + '_' + vertix[0]
@@ -13,15 +13,15 @@ class SmallGap:
 
 
 class HexagonalGap:
-    """ Clase que representa un hueco del tablero de juego reservado para una ficha hexagonal.
-        El identificador del hueco y el número de orden del vértice definen las coordenadas comunes del vértice que une a una ficha hexagonal y otra pequeña.
+    """ Class that represents a gap in the game board reserved for a hexagonal tile.
+        The gap identifier and the order number of the vertex define the common coordinates of the vertex which connect a hexagonal and a small tile.
     """
     def __init__(self, idHexagonal):
         self.id = idHexagonal
-        # 'vertices' es una lista en la que cada elemento corresponde con un vértice del hexágono e incluye lo siguiente:
-        # - Identificador del hueco hexagonal.
-        # - Número de orden del vértice (del 1 al 6).
-        # - Número asignado a ese vértice cuando se coloca en ese hueco una ficha hexagonal. '_' indica que el vértice aún no tiene valor asignado. 
+        # 'vertices' is a list in which each element corresponds to a vertex of the hexagon and includes the following:
+        # - Hexagonal gap identifier.
+        # - Vertex order number (from 1 to 6).
+        # - Number assigned to that vertex when a hexagonal tile is placed in this gap. '_' indicates that the vertex has not yet been assigned a value .
         # - 'V' --> Vacant; 'O' --> Occupied.
         self.vertices = np.array([[idHexagonal, 1, '_', 'V'], [idHexagonal, 2, '_', 'V'], [idHexagonal, 3, '_', 'V'],
                          [idHexagonal, 4, '_', 'V'], [idHexagonal, 5, '_', 'V'], [idHexagonal, 6, '_', 'V']])

@@ -3,31 +3,31 @@ from collections import namedtuple
 
 class Player:
     """
-    Clase que representa al agente.
+    Class that represents the agent.
     """
     def __init__(self, name):
-        self.name = name # Nombre del jugador (agente)
-        self.isTurn = False # Indica si es el turno del agente
-        self.smallPieces = [] # Lista de fichas pequeñas que tiene el agente
-        self.hexagonalPieces = [] # Lista de fichas hexagonales que tiene el agente
-        self.score = 0 # Puntuación
-        self.redIndicator = False # Indicador o testigo rojo, que se activa para indicar al oponentede que le queda una única ficha pequeña.
-        self.whiteIndicator = 0 # Indicador o testigo blanco, que sirve de contador del número de acciones realizadas para conseguir una nueva ficha hexagonal.
-        self.gotPieceBefore = False # Indicador utilizado para impedir al agente robar una ficha pequeña dos veces en un mismo turno.
-        self.numWins = 0 # Dato para la obtención de métricas
-        self.numTurns = 0 # Dato para la obtención de métricas
-        self.accumulatedScore = 0 # Dato para la obtención de métricas
+        self.name = name # Player's name (agent)
+        self.isTurn = False # Indicates if it is the agent's turn
+        self.smallTiles = [] # List of small tiles owned by the agent
+        self.hexagonalTiles = [] # List of heagonal tiles owned by the agent
+        self.score = 0 # Score
+        self.redIndicator = False # Red token. It is activated to indicate to the opponent that he has only one small tile left
+        self.whiteIndicators = 0 # White tokens. It is the counter of the number of actions performed to get a new hexagonal tile
+        self.gotTileBefore = False # Flag used to avoid the agent drawing a small tile twice in the same turn
+        self.numWins = 0 # For metrics
+        self.numTurns = 0 # For metrics
+        self.accumulatedScore = 0 # For metrics
         
-        self.PublicState = namedtuple('PublicState',[ # namedtuple representa los atributos públicos del agente
-            'hexagonalPieces', # tupla ordenada de strings ('hp1', 'hp2', ....)
-            'numSmallPieces', # Integer
+        self.PublicState = namedtuple('PublicState',[ # namedtuple representing the public attributes of the agent
+            'hexagonalTiles', # ordered tuple of strings ('ht1', 'ht2', ....)
+            'numSmallTiles', # Integer
             'redIndicator', # Boolean
-            'whiteIndicator', # Integer
+            'whiteIndicators', # Integer
         ])
         
-        self.PrivateState = namedtuple('PrivateState',[ # namedtuple representa los atributos privados del agente
-            'smallPieces',  # tupla ordenada de strings ('sp1', 'sp2', ....)
-            'publicState' # namedtuple representa los atributos públicos del agente
+        self.PrivateState = namedtuple('PrivateState',[ # namedtuple representing the private attributes of the agent
+            'smallTiles',  # ordered tuple of strings ('st1', 'st2', ....)
+            'publicState' # namedtuple representing the public attributes of the agent
         ])
         
         
@@ -43,32 +43,32 @@ class Player:
     
     def getPublicState(self): 
         """
-        Función que aglutina los atributos públicos del agente.
+        Function that gathers the public attributes of the agent.
         RETURN:
             namedtuple PublicState
         """
         return self.PublicState(
-            hexagonalPieces = tuple(sorted([
-                piece.id
-                for piece in self.hexagonalPieces
-            ])), # tupla ordenada de strings ('hp1', 'hp2', ....)
-            numSmallPieces = len(self.smallPieces), # Integer
+            hexagonalTiles = tuple(sorted([
+                tile.id
+                for tile in self.hexagonalTiles
+            ])), # ordered tuple of strings ('ht1', 'ht2', ....)
+            numSmallTiles = len(self.smallTiles), # Integer
             redIndicator = self.redIndicator, # Boolean
-            whiteIndicator = self.whiteIndicator, # Integer
+            whiteIndicators = self.whiteIndicators, # Integer
         )
     
         
     def getPrivateState(self):
         """
-        Función que aglutina los atributos privados del agente.
+        Function that gathers the private attributes of the agent.
         RETURN:
             namedtuple PrivateState
         """
         return self.PrivateState(
-            smallPieces = tuple(sorted([
-                'sp'+str(int(piece.id[2:])%12) # Para simplificar, se identifica la ficha con alguna de las 12 diferentes que existen
-                for piece in self.smallPieces
-            ])), # tupla ordenada de strings ('hp1', 'hp2', ....)
+            smallTiles = tuple(sorted([
+                'st'+str(int(tile.id[2:])%12) # To simplify, the tile is identified with one of 12 different existing ones
+                for tile in self.smallTiles
+            ])), # ordered tuple of strings ('ht1', 'ht2', ....)
             publicState = self.getPublicState()
         )
 

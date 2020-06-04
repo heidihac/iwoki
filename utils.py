@@ -2,14 +2,14 @@ import numpy as np
 
 def drawPlayersOrder(players):
     """
-    Función que establece al azar el orden de intervención de los jugadores. 
+    Function that randomly sets the order of the players' turns. 
     PARAMETERS:
-        players: lista de jugadores.
+        players: players list.
     RETURN:
-        players: lista de jugadores con nuevo orden establecido.
+        players: list of players with new established order.
     """
     np.random.shuffle(players)
-    print("Por sorteo, el orden de los jugadores es: ", end = '')
+    print("By random drawing, the order of the players is: ", end = '')
     i = 1
     for player in players:
         player.isTurn = False
@@ -17,7 +17,7 @@ def drawPlayersOrder(players):
             player.isTurn = True
             print(player.name, end = '')
         elif i == len(players):
-            print(" y " + str(player.name))
+            print(" and " + str(player.name))
         else:
             print(", " + str(player.name), end = '' )
         i += 1
@@ -27,9 +27,9 @@ def drawPlayersOrder(players):
 
 def listToString(s):
     """ 
-    Función que convierte una lista a string. 
+    Function that converts a list to a string. 
     PARAMETERS:
-        s: lista.
+        s: list.
     RETURN:
         str1: string.
     """
