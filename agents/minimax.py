@@ -5,7 +5,7 @@ import time
 
 class MinimaxPlayer(Player):
     """ 
-    Clase para implementar al jugador Minimax, con con poda alfa-beta y suspensión en profundidad y en tiempo.
+    Class to implement the Minimax player, with alpha-beta pruning and suspension in depth and time.
     """
     
     INFINITE = 10000
@@ -13,37 +13,36 @@ class MinimaxPlayer(Player):
 
     def __init__(self, name):
         super().__init__(name)
-        self.maxTime = 90000 # milisegundos. Tiempo máximo de exploración de cada una de las ramas que cuelgan del nodo raíz
-        self.numNodes = 0 # Dato para la obtención de métricas.
-        self.startTime = None # Establece el valor de tiempo inicial para determinar el momento en que se 
-                              # sobrepasa el límite de búsqueda en una rama principal del nodo raíz
+        self.maxTime = 90000 # miliseconds. Maximum exploration time of each of the branches hanging from the root node
+        self.numNodes = 0 # For metrics.
+        self.startTime = None # It sets the initial time value to determine when the search limit is exceeded on a main branch of the root node
         self.Qfile = None
         
-        if self.gotPieceBefore:
+        if self.gotTileBefore:
             self.bestAction = [['passTurn', None, None, None, 0]]
         else:
-            self.bestAction = ['getSmallPiece', None, None, None, 0]
+            self.bestAction = ['getSmallTile', None, None, None, 0]
         
         
     def generateChildNode(self, gameState, action, playerType):
         """ 
-        Genera un clon del gameState y se ejecuta la acción sobre él. 
+        Function to generate a clone of the gameState and execute the action on it . 
         PARAMETERS:
-            gameState: estado actual del juego que se va a clonar.
-            action: acción que se va a ejecutar sobre el nuevo clon del gameState.
+            gameState: current game state to be cloned.
+            action: action to be executed on the new game state clone.
             playerType: MAX --> Minimax
-                        min --> oponente
+                        min --> Opponent
         RETURN:
-            newGameState: estado del juego resultante.
+            newGameState: Resulting game state.
         """
 
-        newGameState = deepcopy(gameState) # Se clona el gameState 
+        newGameState = deepcopy(gameState) # The gameState is cloned
         if playerType == 'MAX':
             player = [p for p in newGameState.players if p.name == 'Minimax'][0]
         else:
             player = [p for p in newGameState.players if p.name != 'Minimax'][0]
             
-        newGameState.move(action, player) # Se ejecuta la acción sobre newGameState
+        newGameState.move(action, player) # The action is executed on the newGameState
         self.numNodes += 1
 
         return newGameState
@@ -51,65 +50,65 @@ class MinimaxPlayer(Player):
     
     def alpha_beta(self, gameState, depth=DEPTH, alpha=-INFINITE, beta=INFINITE, playerType='MAX'):
         """ 
-        Función que explora de forma recursiva el árbol MINIMAX con poda ALFA-BETA.
+        Function that recursively explores the MINIMAX tree with ALPHA-BETA pruning
         PARAMETERS:
-            gameState: estado actual del juego.
-            depth: profundidad de exploración. Por defecto DEPTH.
-            alpha, beta: valores a actualizar en cada nodo. Por defecto -INFINITE y INFINITE, respectivamente.
+            gameState: current game state.
+            depth: depth of exploration. By default DEPTH.
+            alpha, beta: values to be updated in each node. By default -INFINITE and INFINITE, respectively.
             playerType: MAX --> Minimax
-                        min --> oponente
+                        min --> Opponent
         RETURN:
-            alfa/beta: valor actualizado para el nodo actual.
-            bestAction: acción seleccionada.
+            alfa/beta: updated value for the current node.
+            bestAction: selected action.
         """
         if depth == self.DEPTH:
             self.startTime = time.time()
         minimaxPlayer = [p for p in gameState.players if p.name == 'Minimax'][0]
         otherPlayer = [p for p in gameState.players if p.name != 'Minimax'][0]
 
-        if gameState.gameOver or depth == 0: # Nodo terminal alcanzado por fin de partida o por límite de profundidad. El valor que devuelve es la diferencia de puntos entre el jugador y su oponente tras el recuento final de ambos
-            return gameState.finalPointCount(minimaxPlayer)[0] - gameState.finalPointCount(otherPlayer)[0], None
+        if gameState.gameOver or depth == 0: # Terminal node reached either by game over or by depth. The value returned is the difference in scores between the player and its opponent after the final point tally
+            return gameState.finalPointTally(minimaxPlayer)[0] - gameState.finalPointTally(otherPlayer)[0], None
         
-        if time.time() > self.startTime + self.maxTime/1000: # Nodo terminal alcanzado por límite de tiempo. Devuelve la acción que mejor perspectivas tiene de las exploradas hasta el momento
+        if time.time() > self.startTime + self.maxTime/1000: # Terminal node reached by maxTime. It returns the most promising action of those explored so far
             return alpha, self.bestAction
 
         if playerType == 'MAX':
-            # Se expande el árbol a un nuevo nivel de profundidad. Por cada acción posible del gameState se genera un nodo hijo.
+            # The tree expands to a new level of depth. A child node is generated for every possible action of the gameState
             for action in gameState.getActions(minimaxPlayer):
                 newGameState = self.generateChildNode(gameState, action, playerType)
                 alpha_prev = alpha
                 
-                if len(otherPlayer.smallPieces) == 0:
+                if len(otherPlayer.smallTiles) == 0:
                     newGameState.gameOver = True
                     
                 alpha = max(alpha, self.alpha_beta(newGameState, depth-1, alpha, beta, 'min')[0])
                 if alpha > alpha_prev and depth == self.DEPTH:
                     self.bestAction = action
                 if alpha >= beta:
-                    return alpha, self.bestAction # Se poda el árbol a partir de esta rama
+                    return alpha, self.bestAction # The tree is pruned from this branch
 
             return alpha, self.bestAction
         
         else: # min
-             # Se expande el árbol a un nuevo nivel de profundidad. Por cada acción posible del gameState se genera un nodo hijo.
+             # The tree expands to a new level of depth. A child node is generated for every possible action of the gameState
             for action in gameState.getActions(otherPlayer):
                 newGameState = self.generateChildNode(gameState, action, playerType)
                 
-                if len(minimaxPlayer.smallPieces) == 0:
+                if len(minimaxPlayer.smallTiles) == 0:
                     newGameState.gameOver = True
 
                 beta = min(beta, self.alpha_beta(newGameState, depth-1, alpha, beta, 'MAX')[0])
                 if alpha >= beta:
-                    return beta, None # Se poda el árbol a partir de esta rama
+                    return beta, None # The tree is pruned from this branch
                 
             return beta, None
 
     
     def getMove(self, gameState, *args, **kwargs):
         """ 
-        Función que juega el turno del agente Minimax. Inicia la exploración del árbol MINIMAX para seleccionar la mejora acción y la ejecuta.
+        Function that plays the turn of Agent Minimax. It starts the MINIMAX tree exploration to select the best action and executes it.
         PARAMETER:
-            gameState: estado actual del juego.
+            gameState: current game state.
         """
         if not gameState.gameOver:
             chosenAction = self.alpha_beta(gameState)[1]

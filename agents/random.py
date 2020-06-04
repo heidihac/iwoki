@@ -4,7 +4,7 @@ import random
 
 class RandomPlayer(Player):
     """ 
-    Clase para implementar al jugador Random.
+    Class to implement the Random player.
     """
     def __init__(self, name):
         super().__init__(name)
@@ -13,9 +13,9 @@ class RandomPlayer(Player):
     
     def getMove(self, gameState, *args, **kwargs):
         """ 
-        Función que juega el turno del agente Random. Elige de forma aleatoria la acción a ejecutar.
+        Function that plays agent Random's turn. It chooses randomly the action to be executed.
         PARAMETER:
-            gameState: estado actual del juego.
+            gameState: current game state.
         """
         if not gameState.gameOver:
             actions = gameState.getActions(self)

@@ -3,7 +3,7 @@ import gameState
 
 class HumanPlayer(Player):
     """ 
-    Clase para implementar al jugador Human.
+    Class to implement the Human player.
     """
     def __init__(self, name):
         super().__init__(name)
@@ -12,14 +12,14 @@ class HumanPlayer(Player):
     
     def getMove(self, gameState, *args, **kwargs):
         """ 
-        Función que implementa una API sencilla para permitir al jugador humano ejecutar su turno.
+        Function that implements a simple API to allow the human player to play his turn.
         PARAMETER:
-            gameState: estado actual del juego.
+            gameState: current game state.
         """
         if not gameState.gameOver:
             actions = gameState.getActions(self)
             while True:  
-                print ("\nIndica el número de tu jugada:")
+                print ("\nEnter your play number:")
                 num = 1
                 for action in actions:
                     print ("{} - {}".format(num, action))
@@ -29,7 +29,7 @@ class HumanPlayer(Player):
                     chosenAction = actions[int(optionMenu)-1]
                     break
                 else:
-                    print("Opción incorrecta")
+                    print("Wrong option")
                     continue
             gameState.move(chosenAction, self)
         else:
