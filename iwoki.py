@@ -55,8 +55,8 @@ def saveMetrics(file_name, time, games_played, players):
     print('*****************************')
     mean_time = time / games_played
     print('Games played: {}'.format(games_played))
-    print(f'Average of time of the games:{mean_time: .2f}s')
-    print('Average of turns used by each player: {}'.format(int(players[0].numTurns / games_played)))
+    print(f'Average time of the games:{mean_time: .2f}s')
+    print('Average turns used by each player: {}'.format(int(players[0].numTurns / games_played)))
     winsAny = 0
     nonMinimaxScore=0
     for player in players:
@@ -69,9 +69,9 @@ def saveMetrics(file_name, time, games_played, players):
         print('Number of updated Q-values: {}'.format(agents['QLearner'].numQUpdated))
         print('Number of TOTALS Q-values in the Qfile: {}'.format(len(agents['QLearner'].q)))
     if any([p for p in players if p.name == 'Minimax']):
-        print(f'Average of time for Minimax to decide its movement:{(check_time - start_all) / players[0].numTurns: .2f}s')
-        print('Average of scores difference per game: {}'.format(int(agents['Minimax'].accumulatedScore - nonMinimaxScore) / games_played))
-        print('Average of generated nodes per game: {}'.format(int(agents['Minimax'].numNodes / games_played)))
+        print(f'Average time for Minimax to decide its movement:{(check_time - start_all) / players[0].numTurns: .2f}s')
+        print('Average scores difference per game: {}'.format(int(agents['Minimax'].accumulatedScore - nonMinimaxScore) / games_played))
+        print('Average generated nodes per game: {}'.format(int(agents['Minimax'].numNodes / games_played)))
         
     with open(os.path.join(q_dir, file_name), 'a') as file:
         file.write(str(games_played) +','
