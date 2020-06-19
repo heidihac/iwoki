@@ -86,7 +86,7 @@
 	<br>Fig. 7: Example of placing a small tile [1, 1, 2, +] in the gap H1_H5_H6. 
 </p>
 <p>
-	That is, as you can see, the hexagonal tile located in the gap H6 has been assigned in its vertex 5 the number 2. Therefore, the small tile may cover that vertex with the result of the sum 1 + 1, in the coordinates (H6, 5). Similarly, the result of the addition 2 + 1 can be linked to the hexagon at position H5 by the coordinate vertex (H5, 3). Finally, the result of 1 + 2 is compatible with the wildcard (*), in the vertex of coordinates (H1, 1). The system can therefore consider the placement of this small tile in gap H1_H5_H6 as valid.
+	That is, as you can see, the hexagonal tile located in the gap H6 has been assigned in its vertex 5 the number 2. Therefore, the small tile may cover that vertex with the result of the sum 1 + 1, in the coordinates (H6, 5). Similarly, the result of the addition 2 + 1 can be linked to the hexagon at position H5 by the coordinate vertex (H5, 3). Finally, the result of 1 + 2 is compatible with the wildcard, in the vertex of coordinates (H1, 1). The system can therefore consider the placement of this small tile in gap H1_H5_H6 as valid.
 </p>
 <p>
 	Let's see below how the gaps that make up the virtual board are modelled.
